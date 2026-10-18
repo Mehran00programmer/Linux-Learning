@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#0d1117">
+<meta name="description" content="قسمت اول آموزش لینوکس — ورود به دنیای لینوکس و تسخیر خط فرمان">
+<meta name="author" content="مهران غلامی مقدم">
+<title>قسمت ۰۱ — ورود به دنیای لینوکس و تسخیر خط فرمان</title>
+<link rel="icon" href="mehran-favicon.ico" sizes="any">
+<link rel="canonical" href="https://mehran00programmer.github.io/Linux-Learning/part-01.html">
+<link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+
+<div class="reading-progress">
+  <div class="reading-progress-bar"></div>
+</div>
+
+<header class="doc-header">
+  <div class="page">
+    <div class="hero-badge" style="display:inline-block;font-family:var(--mono);font-size:11px;color:var(--accent);letter-spacing:1.5px;background:rgba(88,166,255,0.08);border:1px solid rgba(88,166,255,0.2);padding:4px 12px;border-radius:20px;margin-bottom:14px;">قسمت ۰۱</div>
+    <h1 class="doc-title">ورود به دنیای <bdi>Linux</bdi> و تسخیر خط فرمان</h1>
+    <p class="doc-subtitle">
+      از یک کاربر عادی تا مهندس سیستم؛ آشنایی با معماری، درخت سیستم فایل و دستورات پایه.
+      در این قسمت یاد می‌گیریم چطور در ترمینال حرکت کنیم و با محیط لینوکس ارتباط برقرار کنیم.
+    </p>
+
+    <div class="author-card">
+      <div class="author-name">مهران غلامی مقدم</div>
+      <a class="author-link" href="https://github.com/Mehran00programmer" target="_blank" rel="noopener noreferrer" aria-label="گیت‌هاب مهران غلامی مقدم">
+        <svg viewBox="0 0 16 16" fill="currentColor" aria-hidden="true">
+          <path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.012 8.012 0 0 0 16 8c0-4.42-3.58-8-8-8z"/>
+        </svg>
+        github.com/Mehran00programmer
+      </a>
+    </div>
+  </div>
+</header>
+
+<div class="page">
+
+  <aside class="toc-wrap fade-in">
+    <div class="toc-header">فهرست مطالب این قسمت</div>
+    <ul class="toc-list">
+      <li><a class="toc-link" href="#s1"><span class="num">01</span><span>سیستم‌عامل به مثابه یک کلان‌شهر هوشمند</span></a></li>
+      <li><a class="toc-link" href="#s2"><span class="num">02</span><span>استاندارد سلسله‌مراتب سیستم فایل</span></a></li>
+      <li><a class="toc-link" href="#s3"><span class="num">03</span><span>دوگانگی مسیرها: مطلق و نسبی</span></a></li>
+      <li><a class="toc-link" href="#s4"><span class="num">04</span><span>رادار و جهت‌یابی در ترمینال</span></a></li>
+      <li><a class="toc-link" href="#s5"><span class="num">05</span><span>دستورات پایه و کتابچه راهنما</span></a></li>
+    </ul>
+  </aside>
+
+  <main>
+
+    <!-- ============ SECTION 1 ============ -->
+    <section class="section fade-in" id="s1">
+      <div class="section-head">
+        <span class="section-num">01</span>
+        <h2 class="section-title">سیستم‌عامل به مثابه یک کلان‌شهر هوشمند</h2>
+      </div>
+
+      <p>
+        برای درک لینوکس، بهترین راه این است که آن را مثل یک <strong>کلان‌شهر هوشمند</strong> تصور کنید.
+        در این شهر، بخش‌های مختلفی وجود دارند که هر کدام وظیفه خاصی دارند:
+      </p>
+
+      <ul>
+        <li><strong>سخت‌افزار (<bdi>Hardware</bdi>):</strong> منابع شهر (نیروگاه‌ها، معادن، کارخانه‌ها).</li>
+        <li><strong>هسته (<bdi>Kernel</bdi>):</strong> سیستم مدیریت شهری؛ تصمیم‌گیرنده تخصیص منابع.</li>
+        <li><strong>خط فرمان (<bdi>Shell / CLI</bdi>):</strong> اتاق فرمان مرکزی! جایی که شما به عنوان تکنسین ارشد بدون واسطه‌های گرافیکی مستقیماً به سیستم دستور می‌دهید.</li>
+      </ul>
+
+      <h3>چرا خط فرمان؟</h3>
+      <p>
+        در رابط گرافیکی (<bdi>GUI</bdi>) شما محدود به دکمه‌هایی هستید که دیگران ساخته‌اند. در ترمینال لینوکس، شما سازنده دکمه‌ها هستید!
+      </p>
+
+      <div class="callout note">
+        <span class="callout-label">نکته کلیدی</span>
+        <p>
+          کاربر مستقیماً با هسته (<bdi>Kernel</bdi>) کار نمی‌کند. شل (<bdi>Shell</bdi>) وظیفه دارد دستورات متنی شما را دریافت، ترجمه و به هسته ارسال کند. شل در واقع مدافع و رابط شما برای صحبت با هسته است!
+        </p>
+      </div>
+
+      <h3>رمزگشایی از اعلان سیستم (<bdi>Prompt</bdi>)</h3>
+      <p>
+        وقتی وارد ترمینال می‌شوید، چیزی شبیه به این می‌بینید:
+      </p>
+      <div class="code-block">
+        <div class="code-block-header">
+          <span class="code-block-lang">Bash</span>
+        </div>
+        <pre>ali@ubuntu-server:~$</pre>
+      </div>
+      <p>این خط به شما می‌گوید:</p>
+      <ul>
+        <li><code>ali</code>: نام کاربری (من کیستم؟)</li>
+        <li><code>@</code>: جداکننده (در کجا؟)</li>
+        <li><code>ubuntu-server</code>: نام ماشین/هاست (میزبان من چیست؟)</li>
+        <li><code>~</code>: مکان فعلی (دایرکتوری خانه/<bdi>Home</bdi>)</li>
+        <li><code>$</code>: سطح دسترسی. علامت <code>$</code> یعنی کاربر عادی و علامت <code>#</code> یعنی کاربر ریشه (<bdi>Root</bdi>).</li>
+      </ul>
+    </section>
+
+    <!-- ============ SECTION 2 ============ -->
+    <section class="section fade-in" id="s2">
+      <div class="section-head">
+        <span class="section-num">02</span>
+        <h2 class="section-title">استاندارد سلسله‌مراتب سیستم فایل</h2>
+      </div>
+
+      <p>
+        لینوکس درایوهای <code>C:</code> یا <code>D:</code> ندارد. همه چیز از یک نقطه مرکزی به نام <bdi>Root</bdi> (ریشه - با علامت <code>/</code>) منشعب می‌شود. این ساختار شبیه یک درخت وارونه است.
+      </p>
+
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr><th>دایرکتوری</th><th>تشبیه شهری</th><th>کارکرد</th></tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><code>/</code></td>
+              <td>بالاترین سطح</td>
+              <td>ریشه سیستم فایل که همه چیز زیر آن قرار دارد.</td>
+            </tr>
+            <tr>
+              <td><code>/bin</code></td>
+              <td>کارخانه</td>
+              <td>فایل‌های اجرایی و دستورات پایه سیستم</td>
+            </tr>
+            <tr>
+              <td><code>/etc</code></td>
+              <td>تالار شهر</td>
+              <td>فایل‌های کانفیگ و تنظیمات سیستم‌عامل</td>
+            </tr>
+            <tr>
+              <td><code>/home</code></td>
+              <td>محله مسکونی</td>
+              <td>دایرکتوری شخصی کاربران (مثل <code>/home/ali</code>)</td>
+            </tr>
+            <tr>
+              <td><code>/var</code></td>
+              <td>بایگانی متغیر</td>
+              <td>فایل‌های با حجم متغیر، مثل لاگ‌ها (<code>/var/log</code>)</td>
+            </tr>
+            <tr>
+              <td><code>/tmp</code></td>
+              <td>هتل موقت</td>
+              <td>فایل‌های موقتی که با ریبوت سیستم پاک می‌شوند</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- ============ SECTION 3 ============ -->
+    <section class="section fade-in" id="s3">
+      <div class="section-head">
+        <span class="section-num">03</span>
+        <h2 class="section-title">دوگانگی مسیرها: هنر ناوبری و مختصات‌دهی</h2>
+      </div>
+
+      <p>در لینوکس دو نوع آدرس‌دهی به فایل‌ها و پوشه‌ها وجود دارد:</p>
+
+      <div class="card-grid">
+        <div class="card">
+          <div class="card-title">مسیر مطلق (<bdi>Absolute Path</bdi>)</div>
+          <div class="card-desc">
+            همیشه از ریشه (<code>/</code>) شروع می‌شود. آدرس ثابت است و مهم نیست الان کجا هستید.
+            <br><br>
+            <strong>آنالوژی:</strong> مختصات دقیق GPS (طول و عرض جغرافیایی).
+            <br>
+            <strong>مثال:</strong> <code>cd /var/log/apt</code>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-title">مسیر نسبی (<bdi>Relative Path</bdi>)</div>
+          <div class="card-desc">
+            همیشه از مکان فعلی شما شروع می‌شود. وابسته به موقعیت فعلی است.
+            <br><br>
+            <strong>آنالوژی:</strong> «دو کوچه برو جلو، پیچ سمت راست».
+            <br>
+            <strong>مثال:</strong> <code>cd ../log/apt</code>
+          </div>
+        </div>
+      </div>
+      
+      <div class="callout warn">
+        <span class="callout-label">هشدار</span>
+        <p>همیشه قبل از استفاده از مسیر نسبی، باید بدانید دقیقاً کجای سیستم هستید!</p>
+      </div>
+    </section>
+
+    <!-- ============ SECTION 4 ============ -->
+    <section class="section fade-in" id="s4">
+      <div class="section-head">
+        <span class="section-num">04</span>
+        <h2 class="section-title">رادار و جهت‌یابی در ترمینال</h2>
+      </div>
+
+      <p>پیش از هر اقدامی در سیستم فایل، وضعیت فعلی خود را اسکن کنید.</p>
+
+      <h3>من کیستم؟ (<code>whoami</code>)</h3>
+      <p>با چه اکانتی وارد سیستم شده‌ام؟</p>
+      <div class="code-block">
+        <div class="code-block-header"><span class="code-block-lang">Bash</span></div>
+        <pre>$ whoami
+ali</pre>
+      </div>
+
+      <h3>کجا هستم؟ (<code>pwd</code>)</h3>
+      <p>مخفف <bdi>Print Working Directory</bdi> است. دقیقاً کجای درخت سیستم فایل قرار دارم؟</p>
+      <div class="code-block">
+        <div class="code-block-header"><span class="code-block-lang">Bash</span></div>
+        <pre>$ pwd
+/home/ali/Desktop</pre>
+      </div>
+
+      <h3>پاکسازی صفحه (<code>clear</code>)</h3>
+      <p>پاکسازی شلوغی‌های صفحه نمایش و بازگشت به خط اول.</p>
+      <div class="code-block">
+        <div class="code-block-header"><span class="code-block-lang">Bash</span></div>
+        <pre>$ clear</pre>
+      </div>
+    </section>
+
+    <!-- ============ SECTION 5 ============ -->
+    <section class="section fade-in" id="s5">
+      <div class="section-head">
+        <span class="section-num">05</span>
+        <h2 class="section-title">دستورات پایه و کتابچه راهنما</h2>
+      </div>
+
+      <h3>موتور حرکت لینوکس: <code>cd</code></h3>
+      <p>مخفف <bdi>Change Directory</bdi> است. با این دستور در پوشه‌ها جابه‌جا می‌شوید.</p>
+      <div class="code-block">
+        <div class="code-block-header"><span class="code-block-lang">Bash</span></div>
+        <pre>cd /          # پرش مستقیم به ریشه
+cd ~          # بازگشت سریع به دایرکتوری خانه
+cd ..         # یک سطح به عقب (دایرکتوری والد)
+cd /etc/ssh   # پرش مستقیم با استفاده از آدرس مطلق
+cd -          # بازگشت به مکان قبلی (مثل دکمه Back)</pre>
+      </div>
+
+      <h3>چشم اشعه ایکس: <code>ls</code></h3>
+      <p>دستور <code>ls</code> به تنهایی فقط نام‌ها را نشان می‌دهد. قدرت واقعی در ترکیب سوئیچ‌هاست:</p>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr><th>دستور</th><th>کارکرد</th></tr>
+          </thead>
+          <tbody>
+            <tr><td><code>ls</code></td><td>اسکن سطحی و نمایش نام‌ها</td></tr>
+            <tr><td><code>ls -a</code></td><td>نمایش فایل‌های مخفی (شروع‌شونده با نقطه)</td></tr>
+            <tr><td><code>ls -lh</code></td><td>اسکن عمیق با متاداده کامل (حجم خوانا، مالک، تاریخ و...)</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h3>کالبدشکافی خروجی <code>ls -l</code></h3>
+      <div class="code-block">
+        <div class="code-block-header"><span class="code-block-lang">Bash</span></div>
+        <pre>-rw-r--r-- 1 ali staff 4.0K Aug 12 10:30 report.txt</pre>
+      </div>
+      <ul>
+        <li><code>-rw-r--r--</code>: نوع فایل (خط تیره یعنی فایل معمولی، <code>d</code> یعنی دایرکتوری) و سطوح دسترسی</li>
+        <li><code>1</code>: تعداد لینک‌ها</li>
+        <li><code>ali</code>: مالک (کاربر ایجادکننده)</li>
+        <li><code>staff</code>: گروه سیستمی مالک</li>
+        <li><code>4.0K</code>: حجم فایل (خوانا شده)</li>
+        <li><code>Aug 12 10:30</code>: تاریخ آخرین تغییر</li>
+        <li><code>report.txt</code>: نام فایل</li>
+      </ul>
+
+      <h3>کتابچه راهنمای ابدی: <code>man</code></h3>
+      <p>به جای حفظ کردن، جستجو کنید! با این دستور می‌توانید دفترچه راهنمای رسمی هر دستور را ببینید.</p>
+      <div class="code-block">
+        <div class="code-block-header"><span class="code-block-lang">Bash</span></div>
+        <pre>$ man ls
+# برای خروج کلید q را فشار دهید
+$ ls --help  # راهنمای سریع در همان خط فرمان</pre>
+      </div>
+
+      <div class="exercise-box">
+        <div class="exercise-title">
+          <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M2 3.5V12a1 1 0 0 0 1 1h10a1 1 0 0 0 1-1V3.5"/>
+            <path d="M2 3.5a1 1 0 0 1 1-1h10a1 1 0 0 1 1 1"/>
+            <path d="M5 2v2M11 2v2M5 7h6M5 10h4"/>
+          </svg>
+          ماموریت‌های این هفته
+        </div>
+        <ol class="exercise-list">
+          <li><strong>جستجوی پیشرفته:</strong> با استفاده از <code>man ls</code>، سوئیچی را پیدا کنید که فایل‌ها را بر اساس حجم مرتب می‌کند (<bdi>Sort by size</bdi>).</li>
+          <li><strong>تحقیق معماری:</strong> تفاوت بین دایرکتوری <code>/bin</code> و <code>/sbin</code> چیست؟</li>
+          <li><strong>ترسیم نقشه:</strong> یک دیاگرام درختی از رابطه والد-فرزندی ۵ دایرکتوری اصلی که امروز یاد گرفتیم رسم کنید.</li>
+          <li><strong>چالش عملی:</strong> در ترمینال سیستم خود مراحل زیر را اجرا کنید:
+            <br><code>pwd</code>
+            <br><code>cd /etc</code>
+            <br><code>pwd</code>
+            <br><code>ls -la</code>
+            <br>در خروجی بالا، مالک فایل <code>passwd</code> کیست؟ (به ستون چهارم نگاه کنید)
+            <br><code>cd ~</code>
+          </li>
+        </ol>
+      </div>
+    </section>
+
+    <nav class="part-nav">
+      <span class="part-nav-btn disabled">
+        <span class="arrow">&#8594;</span>
+        قسمت قبلی
+      </span>
+      <a class="part-nav-btn home" href="index.html">
+        فهرست مطالب
+      </a>
+      <a class="part-nav-btn" href="part-02.html">
+        قسمت بعدی
+        <span class="arrow">&#8592;</span>
+      </a>
+    </nav>
+
+  </main>
+</div>
+
+<footer class="doc-footer">
+  <div class="footer-name">مهران غلامی مقدم</div>
+  <div>
+    <a class="footer-link" href="https://github.com/Mehran00programmer" target="_blank" rel="noopener noreferrer">github.com/Mehran00programmer</a>
+  </div>
+</footer>
+
+<button class="back-to-top" type="button" aria-label="بازگشت به بالا">
+  <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M8 13V3"/>
+    <polyline points="3 8 8 3 13 8"/>
+  </svg>
+</button>
+
+<button class="theme-toggle" type="button" aria-label="تغییر تم">
+  <svg class="icon-moon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M14 9.5A6 6 0 0 1 6.5 2 6 6 0 1 0 14 9.5z"/>
+  </svg>
+  <svg class="icon-sun" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+    <circle cx="8" cy="8" r="3"/>
+    <path d="M8 1v2M8 13v2M1 8h2M13 8h2M3 3l1.5 1.5M11.5 11.5L13 13M13 3l-1.5 1.5M4.5 11.5L3 13"/>
+  </svg>
+</button>
+
+<script src="assets/app.js"></script>
+
+</body>
+  </html>
